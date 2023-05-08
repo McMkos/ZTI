@@ -1,15 +1,44 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <Welcome v-if="welcome" @singUp="singUp" @singIn="singIn"></Welcome>
+  <SingIn v-if="singin" @submitLogin="logIn"></SingIn>
+  <LoggedIn v-bind:email="email" v-if="loggedin"></LoggedIn>
+  <div class="bg">
+    
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import Welcome from './components/Welcome.vue'
+import SingIn from './components/SingIn.vue'
+import LoggedIn from './components/LoggedIn.vue'
 export default {
   name: 'App',
+  data(){
+    return{
+      welcome: true,
+      singup: false,
+      singin: false,
+      loggedin: false,
+      email: ""
+    }
+  },
   components: {
-    HelloWorld
+    Welcome, SingIn, LoggedIn
+  },
+  methods:{
+    singIn(){
+      this.singin = true;
+      this.welcome = false;
+    },
+    singUp(){
+      this.singup = true;
+      this.welcome = false;
+    },
+    logIn(email){
+      this.email = email
+      this.singin = false;
+      this.loggedin = true;
+    }
   }
 }
 </script>
@@ -21,6 +50,20 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+    /* The image used */
+    background-image: url("/home/michal/Programming/web/trenbl/src/assets/background.jpg");
+
+/* Full height */
+height: 100%;
+
+/* Center and scale the image nicely */
+background-position: center;
+background-repeat: no-repeat;
+background-size: cover;
 }
+body, html {
+  height: 100%;
+  margin: 0px;
+}
+
 </style>
