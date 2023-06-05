@@ -1,9 +1,6 @@
 <template>
-  <Welcome v-if="welcome" @singUp="singUp" @singIn="singIn"></Welcome>
-  <SingIn v-if="singin" @submitLogin="logIn"></SingIn>
-  <LoggedIn v-bind:email="email" v-if="loggedin"></LoggedIn>
   <div class="bg">
-    
+    <router-view/>
   </div>
 </template>
 
@@ -50,16 +47,14 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-    /* The image used */
-    background-image: url("/home/michal/Programming/web/trenbl/src/assets/background.jpg");
-
-/* Full height */
-height: 100%;
-
-/* Center and scale the image nicely */
-background-position: center;
-background-repeat: no-repeat;
-background-size: cover;
+  /* The image used */
+  background-image: url("./assets/background.jpg");
+  /* Full height */
+  height: 100%;
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 body, html {
   height: 100%;

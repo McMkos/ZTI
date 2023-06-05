@@ -1,34 +1,63 @@
 <template>
-    <div class="singUpForm">
-        <label style="margin-top: 0px;">Email: </label>
-        <input type="email" required v-model="email">
+    <div class="singInForm">
+        <div class="error" v-if="loginFailed">
+          Login failed! {{ error }}
+        </div>
+        <label style="margin-top: 0px;">Name: </label>
+        <input :class="{inputError: loginFailed}" type="email" required v-model="name">
         <label>Password: </label>
-        <input type="password" required v-model="password">
-        <div class="submitButton" @click="submitLogin">Submit</div>
+        <input :class="{inputError: loginFailed}" type="password" required v-model="password">
+        <div style="width: 100%; height: fit-content; overflow: auto;">
+          <div class="submitButton" @click="submitLogin">Submit</div>
+        </div>
+        <span style="text-align: center; display:block; margin-top: 50px;">App by Michał Kosiba</span>
     </div>
 </template>
 
 <script>
+import axios from '../../api/axios'
+
 export default{
     methods:{
         submitLogin(){
-            this.$emit('submitLogin', this.email)
-            console.log(this.email)
+            let user = {
+              name: this.name,
+              password: this.password
+            }
+            let that = this
+
+              axios.post('/users/login', user)
+              .then(res =>{
+                console.log(res)
+                that.loginFailed = false
+                localStorage.setItem('name', user.name)
+                localStorage.setItem('accessToken', res.data.accessToken)
+                that.$router.push('/')
+              })
+              .catch(function (error){
+                that.error = error.response.data.message
+                that.loginFailed = true
+                that.name = ""
+                that.password = ""
+              })
+              
         }
     },
     data(){
         return{
-            email: "",
-            password: ""
+            name: "",
+            password: "",
+            loginFailed: false,
+            error: ""
         }
     }
   }
 </script>
 
 <style>
-  .singUpForm{
+  .singInForm{
     width: 600px;
-    height: 400px;
+    height: fit-content;
     padding: 20px;
     position: absolute;
     position: absolute;
@@ -43,7 +72,7 @@ export default{
     padding: 7px 20px 0 20px;
     width: fit-content;
     border-radius: 10px;
-    margin: 150px auto;
+    margin-top: 25px;
     border-color: white;
     border-width: 2px;
     background: rgba(44, 62, 80,0.5);
@@ -51,6 +80,7 @@ export default{
     border-style: solid;
     font-size:30px;
     transition: 0.3s;
+    float: right;
   }
   .submitButton:hover{
     border-color: #2c3e50;
@@ -76,5 +106,24 @@ export default{
     border-color: #2c3e50;
     border-radius: 10px;
     color: #2c3e50;
+  }
+  .inputError{
+    display: block;
+    padding: 10px 6px;
+    width: 100%;
+    box-sizing: border-box;
+    border-style: solid;
+    border-color: red;
+    border-radius: 10px;
+    color: #2c3e50;
+  }
+  .error{
+    color: red;
+    width: fit-content;
+    padding: 5px;
+    font-weight: bold;
+    margin: 0 auto;
+    font-size: 1em;
+    text-transform: uppercase;
   }
 </style>
